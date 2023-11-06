@@ -1,0 +1,482 @@
+                                            DAA1(fibonacii)
+
+1. Write a program non-recursive and recursive program to calculate Fibonacci numbers and
+analyze their time and space complexity.
+
+RECURSIVE-------------------------------------------------------------------------------------------------
+
+def recursive_fibonacci(n):
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return recursive_fibonacci(n - 1) + recursive_fibonacci(n - 2)
+
+n = int(input("Enter the number of Fibonacci numbers to generate: "))
+fibonacci_sequence = [recursive_fibonacci(i) for i in range(n)]
+print(f"Fibonacci sequence (recursive): {fibonacci_sequence}")
+
+
+
+
+
+
+NON-RECURSIVE-----------------------------------------------------------------------------------------------
+
+def iterative_fibonacci(n):
+    fib_sequence = [0, 1]
+    for i in range(2, n):
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence
+
+n = int(input("Enter the number of Fibonacci numbers to generate: "))
+fibonacci_sequence = iterative_fibonacci(n)
+print(f"Fibonacci sequence (non-recursive): {fibonacci_sequence}")
+
+
+
+
+
+------------------------DAA 2(huffman)___________________________________________________________________
+2. Write a program to implement Huffman Encoding using a greedy strategy.
+
+
+
+import heapq, collections
+
+def huffman(text):
+    char_freq = collections.Counter(text)
+    heap = [[weight, [char, ""]] for char, weight in char_freq.items()]
+    heapq.heapify(heap)
+
+    while len(heap) > 1:
+        lo = heapq.heappop(heap)
+        hi = heapq.heappop(heap)
+        for pair in lo[1:]:
+            pair[1] = '0' + pair[1]
+        for pair in hi[1:]:
+            pair[1] = '1' + pair[1]
+        heapq.heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
+
+    huffman_dict = {char: code for char, code in heap[0][1:]}
+    return huffman_dict
+
+text = input("Enter the text: ")
+huffman_codes = huffman(text)
+print("Huffman Codes:")
+for char, code in huffman_codes.items():
+    print(f"'{char}': {code}")
+
+
+
+__________________________DAA 3(Fractional knapsack)___________________________________________________
+
+3. Write a program to solve a fractional Knapsack problem using a greedy method.
+
+
+
+
+
+def fractional_knapsack(items, capacity):
+    item_value_weight_ratio = [(item[0] / item[1], item) for item in items]
+    item_value_weight_ratio.sort(reverse=True, key=lambda x: x[0])
+    
+    total_value = 0
+    remaining_capacity = capacity
+    
+    for ratio, item in item_value_weight_ratio:
+        if remaining_capacity >= item[1]:
+            total_value += item[0]
+            remaining_capacity -= item[1]
+        else:
+            fraction = remaining_capacity / item[1]
+            total_value += fraction * item[0]
+            break
+    
+    return total_value
+
+# User input for items and capacity
+num_items = int(input("Enter the number of items: "))
+items = []
+for i in range(num_items):
+    value, weight = map(int, input(f"Enter value and weight for item {i + 1} (separated by space): ").split())
+    items.append((value, weight))
+
+capacity = float(input("Enter the knapsack capacity: "))
+
+# Calculate and print the maximum value
+max_value = fractional_knapsack(items, capacity)
+print("Maximum value that can be obtained:", max_value)
+
+
+
+
+
+_______________________________DAA 4 (knapsack 0 1)_____________________________________________________
+4. Write a program to solve a 0-1 Knapsack problem using dynamic programming or branch and
+bound strategy.
+
+
+def knapsack(values, weights, capacity):
+    n = len(values)
+    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
+
+    for i in range(n + 1):
+        for w in range(capacity + 1):
+            if i == 0 or w == 0:
+                dp[i][w] = 0
+            elif weights[i - 1] <= w:
+                dp[i][w] = max(values[i - 1] + dp[i - 1][w - weights[i - 1]], dp[i - 1][w])
+            else:
+                dp[i][w] = dp[i - 1][w]
+
+    return dp[n][capacity]
+
+# Input from the user
+n = int(input("Enter the number of items: "))
+values = []
+weights = []
+
+for i in range(n):
+    value = int(input("Enter the value of item {}: ".format(i + 1)))
+    weight = int(input("Enter the weight of item {}: ".format(i + 1)))
+    values.append(value)
+    weights.append(weight)
+
+capacity = int(input("Enter the capacity of the knapsack: "))
+
+max_value = knapsack(values, weights, capacity)
+print("The maximum value that can be obtained is:", max_value)
+
+
+
+
+________________________________DAA 5 (N Queens)______________________________________________
+5. Design n-Queens matrix having first Queen placed. Use backtracking to place remaining
+Queens to generate the final n-queen‘s matrix.
+
+print ("Enter the number of queens")
+N = int(input())
+# here we create a chessboard
+# NxN matrix with all elements set to 0
+board = [[0]*N for _ in range(N)]
+def attack(i, j):
+    #checking vertically and horizontally
+    for k in range(0,N):
+        if board[i][k]==1 or board[k][j]==1:
+            return True
+    #checking diagonally
+    for k in range(0,N):
+        for l in range(0,N):
+            if (k+l==i+j) or (k-l==i-j):
+                if board[k][l]==1:
+                    return True
+    return False
+def N_queens(n):
+    if n==0:
+        return True
+    for i in range(0,N):
+        for j in range(0,N):
+            if (not(attack(i,j))) and (board[i][j]!=1):
+                board[i][j] = 1
+                if N_queens(n-1)==True:
+                    return True
+                board[i][j] = 0
+    return False
+N_queens(N)
+for i in board:
+    print (i)
+
+
+
+
+
+
+
+________________________________DAA 6 (N Queens)______________________________________________
+
+6. Write a program for analysis of quick sort by using deterministic and randomized variant.
+
+
+
+
+*******************************************************Machine Learning***********************************
+
+-----------------------------------------------Pract-ML1--------------------------------------------------
+# Predict the price of the Uber ride from a given pickup point to the 
+# agreed drop-off location. Perform following tasks: 
+# 1. Pre-process the dataset. 
+# 2. Identify outliers. 
+# 3. Check the correlation. 
+# 4. Implement linear regression and random forest regression models. 
+# 5. Evaluate the models and compare their respective scores like R2, RMSE, etc. 
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pylab
+import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+import math
+from statsmodels.tools.eval_measures import rmse
+
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import LinearRegression
+
+df = pd.read_csv('uber.csv')
+df.head()
+df.describe()
+df.shape
+df.info()
+df.isnull().sum()
+df1 = df.loc[(df.pickup_latitude > 90) |(df.pickup_latitude < -90) |
+                                   (df.dropoff_latitude > 90) |(df.dropoff_latitude < -90) |
+                                   (df.pickup_longitude > 180) |(df.pickup_longitude < -180) |
+                                   (df.dropoff_longitude > 90) |(df.dropoff_longitude < -90)
+                                    ]
+
+df.drop(df1, inplace=True, errors="ignore")
+df1.shape
+#changing the incorrect data type
+df.pickup_datetime = pd.to_datetime(df.pickup_datetime, errors='coerce')
+df1.dtypes
+# we will extract time feature from the 'pickup_datetime' 
+# we will add a variable which measures the distance between pickup and drop
+df= df.assign(hour = df.pickup_datetime.dt.hour,
+             day= df.pickup_datetime.dt.day,
+             month = df.pickup_datetime.dt.month,
+             year = df.pickup_datetime.dt.year,
+             dayofweek = df.pickup_datetime.dt.dayofweek)
+from math import *
+def distance_transform(longitude1, latitude1, longitude2, latitude2):
+    travel_dist = []
+    
+    for pos in range(len(longitude1)):
+        long1,lati1,long2,lati2 = map(radians, 
+        [longitude1[pos],latitude1[pos],longitude2[pos],latitude2[pos]])
+        dist_long = long2 - long1
+        dist_lati = lati2 - lati1
+        a = sin(dist_lati/2)**2 + cos(lati1) * cos(lati2) * sin(dist_long/2)**2
+        c = 2 * asin(sqrt(a))*6371
+        travel_dist.append(c)
+       
+    return travel_dist
+df['dist_travel_km'] = distance_transform(df['pickup_longitude'].to_numpy(),
+                                                df['pickup_latitude'].to_numpy(),
+                                                df['dropoff_longitude'].to_numpy(),
+                                                df['dropoff_latitude'].to_numpy()
+                                              )
+df = df.drop('pickup_datetime',axis=1)
+df.describe().transpose()
+df.columns[df.dtypes == 'object']
+df.fare_amount.min()
+plt.scatter(df['dist_travel_km'], df['fare_amount'])
+plt.xlabel('dist_travel_km')
+plt.ylabel('fare_amount')
+plt.figure(figsize=(20,12))
+sns.boxplot(data= df)
+
+# outliers detection using boxplot
+plt.figure(figsize =(20, 30))
+for i , variable in enumerate(numeric_column):
+    plt.subplot(6 , 5, i +1)
+    plt.boxplot(df[variable], whis=1.5)
+    plt.tight_layout()
+    plt.title(variable)
+    
+plt.show()
+df.shape
+
+#We will only keep the observation where fare is between 2.5
+df = df.loc[(df.fare_amount >= 0)]
+df.shape
+
+def remove_outlier(df1 , col):
+    Q1 = df1[col].quantile(0.25)
+    Q3 = df1[col].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_whisker = Q1-1.5*IQR
+    upper_whisker = Q3+1.5*IQR
+    df[col] = np.clip(df1[col] , lower_whisker , upper_whisker)
+    return df1
+
+def treat_outliers_all(df1 , col_list):
+    for c in col_list:
+        df1 = remove_outlier(df , c)
+    return df1
+
+#We will only keep the observation where travel distance is less than or equal to 130
+df= df.loc[(df.dist_travel_km >= 1) | (df.dist_travel_km <= 130)]
+print("Remaining observastions in the dataset:", df.shape)
+
+# Heat Map
+incorrect_coordinates = df.loc[(df.pickup_latitude > 90) |(df.pickup_latitude < -90) |
+                                   (df.dropoff_latitude > 90) |(df.dropoff_latitude < -90) |
+                                   (df.pickup_longitude > 180) |(df.pickup_longitude < -180) |
+                                   (df.dropoff_longitude > 90) |(df.dropoff_longitude < -90)
+                                    ]
+
+df.drop(incorrect_coordinates, inplace = True, errors = 'ignore')
+df.head()
+Total = df.isnull().sum().sort_values(ascending = False)
+Percent = (df.isnull().sum()*100/df.isnull().count()).sort_values(ascending = False) 
+missing_data = pd.concat([Total, Percent], axis = 1, keys = ['Total', 'Percentage of Missing Values'])    
+missing_data['Type'] = df[missing_data.index].dtypes
+missing_data
+
+sns.heatmap(df.isnull())
+plt.show()
+corr = df.corr()
+corr
+
+plt.figure(figsize = (10,5))
+
+mask = np.zeros_like(corr)
+mask[np.tril_indices_from(mask, k = -1)] = True
+
+sns.heatmap(corr, cmap = 'RdYlGn', vmax = 1.0, vmin = -1.0, annot = True, annot_kws = {"size": 5}, mask = mask)
+
+plt.xticks(fontsize = 8)
+plt.yticks(fontsize = 10)
+
+plt.show()
+
+#Standardization
+x=df['dist_travel_km'].values.reshape(-1,1) 
+y=df['fare_amount'].values.reshape(-1,1)
+
+from sklearn.preprocessing import StandardScaler
+std = StandardScaler()
+y_std = std.fit_transform(y)
+print(y_std)
+x_std = std.fit_transform(x)
+print(x_std)
+
+#Training and Testing Dataset
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test=train_test_split(x_std,y_std,test_size=0.2,random_state=0)
+
+#Linear Regression: y(fare_amount) is dependent on x(dist_travel_km)
+from sklearn.linear_model import LinearRegression
+l_reg = LinearRegression()
+l_reg.fit(x_train, y_train)
+
+print("Training set score: {: .2f}".format(l_reg.score(x_train, y_train)))
+print("Testing set score: {: .7f}".format(l_reg.score(x_train, y_train)))
+
+l_reg.coef_
+l_reg.intercept_
+
+plt.subplot(2, 2, 1)
+plt.scatter(x_train, y_train, color='red')
+plt.plot(x_train, l_reg.predict(x_train), color='blue')
+plt.title("Fare vs Distance (Training Set")
+plt.ylabel("fare_amount")
+plt.xlabel("dist_travel_km")
+
+plt.subplot(2, 2, 2)
+plt.scatter(x_test, y_test, color='red')
+plt.plot(x_train, l_reg.predict(x_train), color='blue')
+plt.title("Fare vs Distance (Testing Set")
+plt.ylabel("fare_amount")
+plt.xlabel("dist_travel_km")
+
+plt.tight_layout()
+plt.show()
+
+#Predicting Values of y
+y_pred = l_reg.predict(x_test)
+
+result = pd.DataFrame()
+result[['Actual']] = y_test
+result[['Predicted']] = y_pred
+
+result.sample(10)
+
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+print('Mean Absolute % Error:', metrics.mean_absolute_percentage_error(y_test, y_pred))
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+print('R Squared:', np.sqrt(metrics.r2_score(y_test, y_pred)))
+
+cols = ['Model', 'RMSE', 'R-Squared']
+
+result_tabulation = pd.DataFrame(columns = cols)
+linreg_metrics = pd.DataFrame([[
+    "Linear Regression Model",
+    np.sqrt(metrics.mean_squared_error(y_test, y_pred)),
+    np.sqrt(metrics.r2_score(y_test, y_pred))
+    ]], columns = cols)
+
+result_tabulation = pd.concat([result_tabulation, linreg_metrics], ignore_index = True)
+
+result_tabulation
+
+from sklearn.ensemble import RandomForestRegressor
+
+rf_reg = RandomForestRegressor(n_estimators=100, random_state=10)
+
+rf_reg.fit(x_train, y_train)
+
+y_pred_RF = rf_reg.predict(x_test)
+
+result = pd.DataFrame()
+result[['Actual']] = y_test
+result['Predicted'] = y_pred_RF
+
+result.sample(10)
+
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred_RF))
+print('Mean Absolute % Error:', metrics.mean_absolute_percentage_error(y_test, y_pred_RF))
+print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred_RF))
+print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred_RF)))
+print('R Squared:', np.sqrt(metrics.r2_score(y_test, y_pred_RF)))
+
+plt.scatter(x_test, y_test, c='b', alpha= 0.5, marker='.', label='Actual')
+plt.scatter(x_test, y_pred_RF, c='r', alpha= 0.5, marker='.', label='Predicted')
+plt.xlabel('Carat')
+plt.ylabel('Price')
+plt.grid(color = '#D3D3D3', linestyle = 'solid')
+plt.legend(loc = 'lower right')
+
+plt.tight_layout()
+plt.show()
+
+random_forest = pd.DataFrame([[
+    "Random Forest Regression",
+    np.sqrt(metrics.mean_squared_error(y_test, y_pred_RF)),
+    np.sqrt(metrics.r2_score(y_test, y_pred_RF))
+    ]], columns = cols)
+
+result_tabulation = pd.concat([result_tabulation, random_forest], ignore_index = True)
+
+result_tabulation
+
+-------------------------------------------------Pract-ML2---------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
